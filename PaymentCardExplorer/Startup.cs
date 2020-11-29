@@ -47,10 +47,14 @@ namespace PaymentCardExplorer
                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDB"), b => b.MigrationsAssembly("Persistence")));
 
             //Register AppSetting Binders
+            services.Configure<BaseUrls>(Configuration.GetSection("BaseUrls"));
             services.Configure<BrokerConfig>(Configuration.GetSection("BrokerConfig"));
 
             //Register service extensions
             services.RegisterServices();
+
+            //Add Response caching 
+            services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +77,9 @@ namespace PaymentCardExplorer
                 string swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
                 c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "Payment Card Explorer");
             });
+
+            //Configure Response caching
+            app.UseResponseCaching();
 
             app.UseHttpsRedirection();
             app.UseMvc();
