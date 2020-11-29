@@ -2,6 +2,9 @@
 using AppCore.Application.Services;
 using AppCore.Shared.Interfaces;
 using AppCore.Shared.Services;
+using Broker;
+using Broker.Clients.Interfaces;
+using Broker.Clients.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Repository.Interfaces;
 using Persistence.Repository.Services;
@@ -34,12 +37,9 @@ namespace PaymentCardExplorer.ServiceRegistry
             services.AddTransient<IInquiryCountService, InquiryCountService>();
             services.AddTransient<IResponseHandler, ResponseHandler>();
 
-            ////Register Broker services
-            //services.AddScoped<IAppCallBacks, AppCallBacks>();
-            //services.AddSingleton<IBroadcaster, Broadcaster>();
-            //services.AddSingleton<IReceiver, Receiver>();
-            //services.AddHostedService<EventRecieverDaemon>();
-            //services.AddHostedService<EventPublisherDaemon>();
+            //Register Broker services
+            services.AddSingleton<IBroadcaster, Broadcaster>();
+            services.AddHostedService<BrokerDaemon>();
 
 
             return services;

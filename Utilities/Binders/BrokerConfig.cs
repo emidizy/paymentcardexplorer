@@ -9,7 +9,6 @@ namespace Utilities.Binders
         public string ServiceName { get; set; }
         public Server Server { get; set; }
         public ClientQueue ClientQueue { get; set; }
-        public TransactionQueue TransactionQueue { get; set; }
     }
 
     public class Server
@@ -28,10 +27,4 @@ namespace Utilities.Binders
         public ushort MaxQueueCount { get; set; }
     }
 
-    public class TransactionQueue
-    {
-        public string QueueId { get; set; }
-        public string RoutingKey { get; set; }
-        public ushort MaxQueueCount { get; set; }
-    }
 }

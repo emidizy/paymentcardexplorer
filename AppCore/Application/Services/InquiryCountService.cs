@@ -49,12 +49,11 @@ namespace AppCore.Application.Services
                 else
                 {
                     //Format result (hit counts)
-                    var inquiryList = new List<Dictionary<string, long>>();
+                    var inquiryList = new Dictionary<string, long>();
                     foreach (var card in uniqueInquiriesPerCard)
                     {
-                        var data = new Dictionary<string, long>();
-                        data.Add(card.IIN, card.NoOfHit);
-                        inquiryList.Add(data);
+
+                        inquiryList.Add(card.IIN, card.NoOfHit);
                     }
                     var hitCountDTO = new GetHitCountDTO()
                     {

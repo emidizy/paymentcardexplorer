@@ -1,5 +1,8 @@
 ﻿using AppCore.Application.Interfaces;
 using AppCore.Shared.Interfaces;
+using Broker.Clients.Interfaces;
+using Broker.Events;
+using Domain.DTOs.Broker;
 using Domain.DTOs.CardDetails;
 using Domain.DTOs.HitCount;
 using Domain.Model;
@@ -23,17 +26,20 @@ namespace AppCore.Application.Services
         private readonly BaseUrls _baseUrls;
         private readonly IHttpClient _httpClient;
         private readonly IResponseHandler _responseHandler;
+        private readonly IBroadcaster _eventPublisher;
         private readonly IInquiryCountService _inquiryCountSvc;
 
         public BinListService(Logger logger,
             IHttpClient httpClient,
             IResponseHandler responseHandler,
             IOptionsSnapshot<BaseUrls> baseUrls,
+            IBroadcaster eventPublisher,
             IInquiryCountService inquiryCountService)
         {
             _logger = logger;
             _httpClient = httpClient;
             _baseUrls = baseUrls.Value;
+            _eventPublisher = eventPublisher;
             _responseHandler = responseHandler;
             _inquiryCountSvc = inquiryCountService;
         }
@@ -76,6 +82,18 @@ namespace AppCore.Application.Services
                     else
                     {
                         response = _responseHandler.CommitResponse(requestId, ResponseCodes.SUCCESS, "Success!, card details retrieved", cardDetailDTO);
+
+                        //Publish message (card details) to exchange
+                        
+                        var cardInfo = new QueuePayload()
+                        {
+                            CardIIN = cardInfoReq.CardIIN,
+                            Scheme = cardDetailDTO.Scheme,
+                            BankName = cardDetailDTO.Bank.Name
+                        };
+                        var queueMessage = JsonConvert.SerializeObject(cardInfo);
+                        await _eventPublisher.PublishPayload(queueMessage, BrokerEvents.NotifyClient);
+
                     }
 
                     //Update database with inquiry count
