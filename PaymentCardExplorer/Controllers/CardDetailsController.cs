@@ -22,7 +22,7 @@ namespace PaymentCardExplorer.Controllers
         }
 
         [HttpGet("retrieve")]
-        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[]{ "cardIIN" })]
+        [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[]{ "cardIIN" })]
         public async Task<IActionResult> GetCardDetails(int cardIIN)
         {
             var response = await _cardDetailService.GetCardDetailsWithBIN(cardIIN);

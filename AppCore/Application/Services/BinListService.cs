@@ -67,7 +67,7 @@ namespace AppCore.Application.Services
                     //Do request to 3rd party API to fetch card details
                     var binListUrl = $"{_baseUrls.BinListAPI}/{cardIIN}";
 
-                    var apiResp = await _httpClient.Get(binListUrl, requestId);
+                    var apiResp = await _httpClient.Get(binListUrl, requestId, cardIIN.ToString());
 
                     if (apiResp.StatusCode != 200)
                     {

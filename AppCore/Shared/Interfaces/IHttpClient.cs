@@ -8,6 +8,6 @@ namespace AppCore.Shared.Interfaces
 {
     public interface IHttpClient
     {
-        Task<HttpClientResp> Get(string url, string requestId, string header = null);
+        Task<HttpClientResp> Get(string url, string requestId, string cacheKey = null);
     }
 }

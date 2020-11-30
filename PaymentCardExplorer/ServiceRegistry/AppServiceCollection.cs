@@ -33,6 +33,7 @@ namespace PaymentCardExplorer.ServiceRegistry
             //Register Core services
             services.AddTransient<IRestResponse, RestResponse>();
             services.AddTransient<IHttpClient, HttpClient>();
+            services.AddTransient<IHttpCache, HttpCache>();
             services.AddTransient<IBinListService, BinListService>();
             services.AddTransient<IInquiryCountService, InquiryCountService>();
             services.AddTransient<IResponseHandler, ResponseHandler>();
