@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PaymentCardExplorer.Interceptors;
 using PaymentCardExplorer.ServiceRegistry;
 using Persistence;
 using Swashbuckle.AspNetCore.Swagger;
@@ -32,6 +33,13 @@ namespace PaymentCardExplorer
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            //Configure CORs Policy based on access requirements
+            services.AddCors(options =>
+                options.AddPolicy("CorsPolicy",
+                    p => p.AllowAnyOrigin()
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()));
+
             //Register swagger
             services.AddSwaggerGen(x => {
                 x.SwaggerDoc("v1", new Info()
@@ -48,6 +56,7 @@ namespace PaymentCardExplorer
 
             //Register AppSetting Binders
             services.Configure<BaseUrls>(Configuration.GetSection("BaseUrls"));
+            services.Configure<AuthTokens>(Configuration.GetSection("AuthTokens"));
             services.Configure<BrokerConfig>(Configuration.GetSection("BrokerConfig"));
 
             //Register service extensions
@@ -58,7 +67,7 @@ namespace PaymentCardExplorer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<AuthTokens> authTokens)
         {
             if (env.IsDevelopment())
             {
@@ -80,6 +89,11 @@ namespace PaymentCardExplorer
 
             //Configure Response caching
             app.UseResponseCaching();
+
+            app.UseCors("CorsPolicy");
+
+            //add request interceptor
+            app.UseMiddleware<Authorization>(authTokens);
 
             app.UseHttpsRedirection();
             app.UseMvc();
