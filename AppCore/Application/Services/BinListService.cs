@@ -32,7 +32,7 @@ namespace AppCore.Application.Services
         public BinListService(Logger logger,
             IHttpClient httpClient,
             IResponseHandler responseHandler,
-            IOptionsSnapshot<BaseUrls> baseUrls,
+            IOptions<BaseUrls> baseUrls,
             IBroadcaster eventPublisher,
             IInquiryCountService inquiryCountService)
         {
@@ -47,6 +47,7 @@ namespace AppCore.Application.Services
         public async Task<ResponseParam> GetCardDetailsWithBIN(int cardIIN)
         {
             var requestId = Helper.GenerateUniqueId();
+
             try
             {
                 var response = _responseHandler.InitializeResponse(requestId);
@@ -54,12 +55,13 @@ namespace AppCore.Application.Services
 
                 GetCardDetailsDTO cardDetailDTO = null;
                 var updatedRowCount = 0;
-
+                
                 //Validate IIN
                 if (!IsValidIIN(cardIIN.ToString()))
                 {
                     response = _responseHandler
-                        .CommitResponse(requestId, ResponseCodes.INVALID_PARAM, "Please supply first 6 or 8 digits of your credit or debit card PAN");
+                        .CommitResponse(requestId, ResponseCodes.INVALID_PARAM, "Please supply first 6 or 8 digits of your credit or debit card PAN", null);
+                    
                 }
                 else
                 {
@@ -114,7 +116,7 @@ namespace AppCore.Application.Services
                 }
 
                 _logger.LogInfo($"[BinListService][GetCardDetailsWithBIN][Req] => {JsonConvert.SerializeObject(response)} | [rowsUpdated]=> {updatedRowCount} | [requestId]=> {requestId}");
-
+                
                 return response;
             }
             catch (Exception ex)

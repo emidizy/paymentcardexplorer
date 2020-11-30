@@ -8,13 +8,14 @@ namespace Utilities
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public void LogInfo(string message)
+        public virtual void LogInfo(string message)
         {
             _logger.Info(message);
         }
-        public void LogError(string message)
+        public virtual void LogError(string message)
         {
             _logger.Error(message);
         }
+
     }
 }
