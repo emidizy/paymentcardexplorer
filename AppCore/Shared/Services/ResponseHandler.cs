@@ -27,7 +27,7 @@ namespace AppCore.Shared.Services
                 RequestId = requestId,
                 Code = code,
                 Message = message,
-                Data = data == null ? new List<object>() { } : data
+                Data = data
             };
         }
 
@@ -40,7 +40,7 @@ namespace AppCore.Shared.Services
                 RequestId = requestId,
                 Code = ResponseCodes.EXCEPTION,
                 Message = string.IsNullOrWhiteSpace(customMessage) ? ERR_MESSAGE : $"An exception error occoured. | {customMessage}",
-                Data = new List<object>() { }
+                Data = null
             };
         }
     }

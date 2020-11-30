@@ -21,11 +21,11 @@ namespace PaymentCardExplorer.Controllers
             _cardDetailService = binListService;
         }
 
-        [HttpPost("retrieve")]
-        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
-        public async Task<IActionResult> GetCardDetails([FromBody] GetCardDetailsReq cardDetailsReq)
+        [HttpGet("retrieve")]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[]{ "cardIIN" })]
+        public async Task<IActionResult> GetCardDetails(int cardIIN)
         {
-            var response = await _cardDetailService.GetCardDetailsWithBIN(cardDetailsReq);
+            var response = await _cardDetailService.GetCardDetailsWithBIN(cardIIN);
             return Ok(response);
         }
 

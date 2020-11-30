@@ -9,7 +9,7 @@ namespace AppCore.Application.Interfaces
 {
     public interface IBinListService
     {
-        Task<ResponseParam> GetCardDetailsWithBIN(GetCardDetailsReq cardInfoReq);
+        Task<ResponseParam> GetCardDetailsWithBIN(int cardIIN);
         ResponseParam GetHitCount();
     }
 }
